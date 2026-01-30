@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>স্মৃতিমালা - বিশেষ উপহার</title>
+    <title>সৃতি তুই আমার প্রথম ভালোবাসা</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -28,19 +28,26 @@
         
         .glass-card { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 2.5rem; }
         
-        .btn-primary { background: linear-gradient(to right, #db2777, #e11d48); padding: 14px 28px; border-radius: 1.2rem; font-weight: bold; transition: all 0.3s; color: white; }
+        .btn-primary { background: linear-gradient(to right, #db2777, #e11d48); padding: 14px 28px; border-radius: 1.2rem; font-weight: bold; transition: all 0.3s; color: white; border: none; cursor: pointer; }
         .btn-primary:hover { transform: translateY(-3px) scale(1.03); }
 
-        /* ডায়েরি অ্যানিমেশন */
-        .diary-page { transform-origin: left; transition: transform 0.6s; }
-        .page-flip { transform: rotateY(-180deg); }
-
-        /* উইশ বোতল */
-        .bottle { animation: float 3s ease-in-out infinite; cursor: pointer; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        /* Custom Modal Styles */
+        #custom-alert { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
+        .modal-box { transform: scale(0.9); transition: 0.3s ease; }
+        .modal-active .modal-box { transform: scale(1); }
     </style>
 </head>
 <body class="bg-animate">
+
+    <div id="custom-alert">
+        <div class="modal-box glass-card p-8 max-w-sm w-full mx-4 text-center border-pink-500/40">
+            <div class="flex justify-center mb-4 text-pink-400">
+                <i data-lucide="sparkles" size="48"></i>
+            </div>
+            <p id="alert-text" class="text-lg font-medium mb-6 text-pink-50 leading-relaxed"></p>
+            <button onclick="closeAlert()" class="btn-primary w-full shadow-lg shadow-pink-900/40">ঠিক আছে</button>
+        </div>
+    </div>
 
     <div id="petals-container" class="fixed inset-0 pointer-events-none"></div>
 
@@ -57,13 +64,13 @@
                 <i data-lucide="heart" class="text-pink-500 w-28 h-28 animate-pulse fill-current"></i>
             </div>
         </div>
-        <h1 class="text-5xl font-bold mt-10 text-white drop-shadow-lg">হ্যালো স্মৃতি ❤️</h1>
+        <h1 class="text-5xl font-bold mt-10 text-white drop-shadow-lg text-center px-4">হ্যালো স্মৃতি ❤️</h1>
         <p class="mt-4 text-pink-200 animate-bounce uppercase tracking-widest text-sm">টাচ করো</p>
     </div>
 
     <div id="scene-mood" class="scene">
         <div class="glass-card p-10 text-center max-w-md w-full mx-4">
-            <h2 class="text-3xl font-bold mb-8 text-white">আজ তোমার মন কেমন? ✨</h2>
+            <h2 class="text-3xl font-bold mb-8 text-white">আজ তোর মন কেমন? ✨</h2>
             <div class="flex gap-6 justify-center mb-8">
                 <button onclick="selectMood('happy')" class="glass-card p-6 text-5xl hover:bg-pink-500/20 transition-all">😊</button>
                 <button onclick="selectMood('sad')" class="glass-card p-6 text-5xl hover:bg-pink-500/20 transition-all">😔</button>
@@ -78,28 +85,17 @@
         <div class="glass-card p-10 w-full max-w-lg mx-4">
             <h2 class="text-3xl font-bold mb-8 text-pink-400 flex items-center gap-3"><i data-lucide="shield-check"></i> আমার অঙ্গীকার</h2>
             <ul class="space-y-6 text-lg text-gray-100">
-                <li class="flex items-start gap-3">🌸 সবসময় তোমার পাশে থাকবো, সুখে আর দুঃখে।</li>
-                <li class="flex items-start gap-3">🌸 তোমার প্রতিটি হাসি হবে আমার বেঁচে থাকার শক্তি।</li>
-                <li class="flex items-start gap-3">🌸 সারা জীবন একইভাবে তোমাকে ভালোবেসে যাবো।</li>
+                <li class="flex items-start gap-3">🌸 I Love you jan </li>
+                <li class="flex items-start gap-3">🌸  you are my first love </li>
+                <li class="flex items-start gap-3">🌸 সারা জীবন একইভাবে তোকে ভালোবেসে যাবো।</li>
             </ul>
-            <button onclick="nextScene('diary')" class="btn-primary w-full mt-10">সামনে চলো ❤️</button>
-        </div>
-    </div>
-
-    <div id="scene-diary" class="scene">
-        <div class="glass-card p-10 w-full max-w-md mx-4 text-center">
-            <div class="mb-6 flex justify-center text-pink-400"><i data-lucide="book-open" size="48"></i></div>
-            <h2 class="text-2xl font-bold mb-4">আমাদের স্মৃতি ডায়েরি</h2>
-            <div id="diary-content" class="min-h-[100px] italic text-pink-100 text-lg mb-8">
-                "মনে আছে সেই প্রথম দিনটি? যখন আমরা..."
-            </div>
-            <button onclick="flipDiary()" class="btn-primary w-full">পাতা উল্টাও</button>
+            <button onclick="nextScene('gallery')" class="btn-primary w-full mt-10">সামনে চলো ❤️</button>
         </div>
     </div>
 
     <div id="scene-gallery" class="scene">
         <div class="glass-card p-6 w-full max-w-sm mx-4">
-            <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/20">
+            <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/20 shadow-2xl">
                 <img id="gallery-img" src="" class="w-full h-96 object-cover">
                 <div class="absolute bottom-0 bg-black/80 w-full p-5">
                     <p id="gallery-caption" class="text-center text-white italic"></p>
@@ -111,12 +107,12 @@
 
     <div id="scene-bottle" class="scene">
         <div class="glass-card p-10 text-center max-w-md w-full mx-4">
-            <div class="bottle mb-8 text-blue-400 flex justify-center">
+            <div class="bottle mb-8 text-blue-400 flex justify-center animate-bounce">
                 <i data-lucide="container" size="64"></i>
             </div>
             <h2 class="text-2xl font-bold mb-4">উইশ বোটল</h2>
-            <p class="text-pink-200 mb-8">তোমার মনে লুকিয়ে থাকা কোনো ইচ্ছার কথা এখানে লেখো, যা আমি পূরণ করবো।</p>
-            <textarea id="wish-input" class="w-full p-4 rounded-2xl bg-black/40 border border-white/20 text-white outline-none mb-6" placeholder="তোমার ইচ্ছা..."></textarea>
+            <p class="text-pink-200 mb-8">তোর মনে লুকিয়ে থাকা কোনো ইচ্ছার কথা এখানে লেখো, যা আমি পূরণ করবো।</p>
+            <textarea id="wish-input" class="w-full p-4 rounded-2xl bg-black/40 border border-white/20 text-white outline-none mb-6 focus:border-pink-500 transition-all" placeholder="তোমার ইচ্ছা..."></textarea>
             <button onclick="sendWish()" class="btn-primary w-full">সাগরে ভাসিয়ে দাও</button>
         </div>
     </div>
@@ -124,25 +120,37 @@
     <div id="scene-end" class="scene text-center">
         <div class="glass-card p-12 mx-4 max-w-xl">
             <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 mb-8 drop-shadow-2xl">I LOVE YOU</h1>
-            <p class="text-2xl text-gray-100 leading-relaxed">তুমি আমার পৃথিবী। সারাটা জীবন এভাবেই আমার হাতটা ধরে পাশে থেকো। ❤️</p>
+            <p class="text-2xl text-gray-100 leading-relaxed">তুই সাড়া জীবন আমার পাশে থাকবি তো ❤️</p>
             <button onclick="location.reload()" class="mt-12 text-sm text-gray-500 uppercase tracking-widest hover:text-white transition-colors">আবার শুরু থেকে দেখো</button>
         </div>
     </div>
 
     <script>
-        const startDate = new Date("2023-01-01T00:00:00"); 
-        
-        const memories = [
-            { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2", caption: "তোমার ওই মায়াবী হাসি আমার সব দুঃখ ভুলিয়ে দেয়।" },
-            { url: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e", caption: "প্রতিটি মুহূর্ত তোমাকে নতুন করে ভালোবাসতে ইচ্ছে করে।" }
-        ];
+        // Custom Alert Logic
+        function showAlert(msg) {
+            const alertBox = document.getElementById('custom-alert');
+            document.getElementById('alert-text').innerText = msg;
+            alertBox.style.display = 'flex';
+            setTimeout(() => alertBox.classList.add('modal-active'), 10);
+        }
 
-        const diaryEntries = [
-            "মনে আছে সেই প্রথম দিনটি? যখন আমরা প্রথম কথা বলেছিলাম...",
-            "আমাদের প্রথম কফি ডেট, যেখানে আমরা ঘণ্টার পর ঘণ্টা গল্প করেছিলাম...",
-            "তোমার সেই পাগলামিগুলো, যা আমাকে বারবার প্রেমে ফেলে দেয়..."
+        function closeAlert() {
+            const alertBox = document.getElementById('custom-alert');
+            alertBox.classList.remove('modal-active');
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+                if(document.getElementById('scene-bottle').classList.contains('active')) {
+                    nextScene('end');
+                }
+            }, 300);
+        }
+
+        const startDate = new Date("2023-01-01T00:00:00"); 
+        const memories = [
+            { url: "https://i.ibb.co/5gTRgHkw/IMG20260126100531.jpg", caption: "প্রথম একসাথে তোলা দুইজনের ছবি" },
+            { url: "https://i.ibb.co/8gDV1dw6/IMG-20260120-184619-150.jpg", caption: "প্রতিটি মুহূর্ত তোমাকে নতুন করে ভালোবাসতে ইচ্ছে করে।" }
+           
         ];
-        let diaryIdx = 0;
 
         function nextScene(id) {
             document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
@@ -159,18 +167,9 @@
         function selectMood(m) {
             const msg = document.getElementById('mood-msg');
             document.getElementById('mood-next').classList.remove('hidden');
-            if(m === 'happy') msg.innerText = "তোমার এই হাসি আমি সারাজীবন দেখতে চাই! ❤️";
-            else if(m === 'sad') msg.innerText = "মন খারাপ করো না, আমি সবসময় তোমার পাশে আছি। 🫂";
-            else msg.innerText = "রাগ করলে তোমাকে আরও বেশি কিউট লাগে! 😘";
-        }
-
-        function flipDiary() {
-            diaryIdx++;
-            if(diaryIdx < diaryEntries.length) {
-                document.getElementById('diary-content').innerText = diaryEntries[diaryIdx];
-            } else {
-                nextScene('gallery');
-            }
+            if(m === 'happy') msg.innerText = "তোর এই হাসি আমি সারাজীবন দেখতে চাই! ❤️";
+            else if(m === 'sad') msg.innerText = "মন খারাপ করো না, আমি সবসময় তোর পাশে আছি। 🫂";
+            else msg.innerText = "রাগ করলে তোকে আরও বেশি কিউট লাগে! 😘";
         }
 
         let photoIdx = 0;
@@ -190,11 +189,10 @@
 
         function sendWish() {
             const wish = document.getElementById('wish-input').value;
-            if(wish) {
-                alert("তোমার ইচ্ছাটি বোটলে ভরে সাগরে ভাসিয়ে দেওয়া হয়েছে! আমি এটি পূরণের চেষ্টা করবো। ✨");
-                nextScene('end');
+            if(wish.trim()) {
+                showAlert("তোর ইচ্ছাটি বোতলে ভরে সাগরে ভাসিয়ে দেওয়া হয়েছে! আমি এটি পূরণের চেষ্টা করবো। ✨");
             } else {
-                alert("একটি ইচ্ছার কথা লেখো!");
+                showAlert("উঁহু! আগে একটি ইচ্ছার কথা লেখো। 😜");
             }
         }
 
@@ -208,6 +206,7 @@
         setInterval(updateTimer, 60000);
         updateTimer();
 
+        // Petals logic
         setInterval(() => {
             const p = document.createElement('div');
             p.className = 'petal';
