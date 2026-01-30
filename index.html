@@ -35,6 +35,23 @@
         #custom-alert { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
         .modal-box { transform: scale(0.9); transition: 0.3s ease; }
         .modal-active .modal-box { transform: scale(1); }
+
+        /* লোডার অ্যানিমেশন */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ec4899; /* Pink Color */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
 <body class="bg-animate">
@@ -86,7 +103,7 @@
             <h2 class="text-3xl font-bold mb-8 text-pink-400 flex items-center gap-3"><i data-lucide="shield-check"></i> আমার অঙ্গীকার</h2>
             <ul class="space-y-6 text-lg text-gray-100">
                 <li class="flex items-start gap-3">🌸 I Love you jan </li>
-                <li class="flex items-start gap-3">🌸  you are my first love </li>
+                <li class="flex items-start gap-3">🌸 you are my first love </li>
                 <li class="flex items-start gap-3">🌸 সারা জীবন একইভাবে তোকে ভালোবেসে যাবো।</li>
             </ul>
             <button onclick="nextScene('gallery')" class="btn-primary w-full mt-10">সামনে চলো ❤️</button>
@@ -95,8 +112,11 @@
 
     <div id="scene-gallery" class="scene">
         <div class="glass-card p-6 w-full max-w-sm mx-4">
-            <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/20 shadow-2xl">
-                <img id="gallery-img" src="" class="w-full h-96 object-cover">
+            <div class="relative rounded-3xl overflow-hidden mb-6 border border-white/20 shadow-2xl h-96 bg-black/40">
+                <div id="img-loader" class="loader"></div>
+                
+                <img id="gallery-img" src="" class="w-full h-full object-cover transition-opacity duration-500 opacity-0">
+                
                 <div class="absolute bottom-0 bg-black/80 w-full p-5">
                     <p id="gallery-caption" class="text-center text-white italic"></p>
                 </div>
@@ -146,11 +166,22 @@
         }
 
         const startDate = new Date("2023-01-01T00:00:00"); 
+        
+        // মেমোরি ডাটা
         const memories = [
             { url: "https://i.ibb.co/5gTRgHkw/IMG20260126100531.jpg", caption: "প্রথম একসাথে তোলা দুইজনের ছবি" },
             { url: "https://i.ibb.co/8gDV1dw6/IMG-20260120-184619-150.jpg", caption: "প্রতিটি মুহূর্ত তোমাকে নতুন করে ভালোবাসতে ইচ্ছে করে।" }
-           
         ];
+
+        // ছবি প্রি-লোড করার ফাংশন (যাতে আগে থেকেই ডাউনলোড হয়ে থাকে)
+        function preloadImages() {
+            memories.forEach(mem => {
+                const img = new Image();
+                img.src = mem.url;
+            });
+        }
+        // পেজ লোড হওয়ার সাথে সাথেই ছবি ডাউনলোড শুরু হবে
+        preloadImages();
 
         function nextScene(id) {
             document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
@@ -173,9 +204,25 @@
         }
 
         let photoIdx = 0;
+        
         function updatePhoto() {
-            document.getElementById('gallery-img').src = memories[photoIdx].url;
-            document.getElementById('gallery-caption').innerText = memories[photoIdx].caption;
+            const img = document.getElementById('gallery-img');
+            const loader = document.getElementById('img-loader');
+            const caption = document.getElementById('gallery-caption');
+
+            // লোডার দেখাও এবং ছবি লুকাও
+            loader.style.display = 'block';
+            img.style.opacity = '0';
+            
+            // নতুন সোর্স সেট করো
+            img.src = memories[photoIdx].url;
+            caption.innerText = memories[photoIdx].caption;
+
+            // ছবি লোড হলে লোডার সরাও এবং ছবি দেখাও
+            img.onload = function() {
+                loader.style.display = 'none';
+                img.style.opacity = '1';
+            };
         }
 
         function nextPhoto() {
@@ -206,7 +253,6 @@
         setInterval(updateTimer, 60000);
         updateTimer();
 
-        // Petals logic
         setInterval(() => {
             const p = document.createElement('div');
             p.className = 'petal';
